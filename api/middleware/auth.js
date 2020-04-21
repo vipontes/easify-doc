@@ -2,21 +2,6 @@ const jwt = require("jsonwebtoken");
 const moment = require("moment");
 const db = require("../../database/conn")();
 
-function julianIntToDate(n) {
-    var a = n + 32044;
-    var b = Math.floor(((4*a) + 3)/146097);
-    var c = a - Math.floor((146097*b)/4);
-    var d = Math.floor(((4*c) + 3)/1461);
-    var e = c - Math.floor((1461 * d)/4);
-    var f = Math.floor(((5*e) + 2)/153);
-
-    var D = e + 1 - Math.floor(((153*f) + 2)/5);
-    var M = f + 3 - 12 - Math.round(f/10);
-    var Y = (100*b) + d - 4800 + Math.floor(f/10);
-
-    return new Date(Y,M,D);
-}
-
 module.exports = (app) => {
   const auth = {};
 
