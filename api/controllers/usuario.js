@@ -25,7 +25,7 @@ module.exports = (app) => {
 
     let query = db.query(sql, (err, result) => {
       if (err) {
-        res.status(400).json({ message: "Unknown error" });
+        res.status(400).send({ message: "Unknown error" });
       } else {
         res.status(200).send(result[0]);
       }
@@ -52,7 +52,7 @@ module.exports = (app) => {
 
     let query = db.query(sql, (err, result) => {
       if (err) {
-        res.status(400).json({ message: "Unknown error" });
+        res.status(400).send({ message: "Unknown error" });
       } else {
         res.status(200).send(result);
       }
@@ -67,7 +67,7 @@ module.exports = (app) => {
     const password = req.body.usuario_senha;
 
     if (email == undefined || password == undefined) {
-      res.status(400).json({ message: "Please pass email and password" });
+      res.status(400).send({ message: "Please pass email and password" });
       return;
     }
 
@@ -81,13 +81,13 @@ module.exports = (app) => {
 
     var query = db.query(sql, (err, result) => {
       if (err) {
-        res.status(400).json({ message: "Unknown error" });
+        res.status(400).send({ message: "Unknown error" });
       } else if (result.length == 0) {
-        res.status(404).json({ message: "Invalid credentials" });
+        res.status(401).send({ message: "Invalid credentials" });
       } else {
         var data = result[0];
         if (data.usuario_ativo == 0) {
-          res.status(400).json({ message: "Access denied" });
+          res.status(400).send({ message: "Access denied" });
         } else {
           const usuarioId = data.usuario_id;
           var token = jwt.sign({ id: usuarioId }, secret, {
@@ -97,7 +97,7 @@ module.exports = (app) => {
           sql = `UPDATE usuario SET usuario_token = '${token}' WHERE usuario_id = ${usuarioId}`;
           query = db.query(sql, (err, result) => {
             if (err) {
-              res.status(400).json({ message: "Unknown error" });
+              res.status(400).send({ message: "Unknown error" });
             } else {
               sql = `SELECT 
                 u.usuario_id, 
@@ -113,7 +113,7 @@ module.exports = (app) => {
 
               query = db.query(sql, (err, result) => {
                 if (err) {
-                  res.status(400).json({ message: "Unknown error" });
+                  res.status(400).send({ message: "Unknown error" });
                 } else {
                   data = result[0];
                   res.status(200).send(data);
